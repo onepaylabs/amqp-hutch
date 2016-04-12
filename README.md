@@ -24,6 +24,29 @@ hutch.on('error', function(err){
 });
 ```
 
+## Publish to Exchange
+```javascript
+var message = {"Message": "Hello"};
+
+var publishOptions = {
+  exchange: {
+    durable: true,
+    confirm: true,
+    autoDelete: false
+  },
+  publish: {
+    persistent: true,
+    contentType: 'application/json',
+    expiration: 86400000,
+    timestamp: Math.floor(Date.now() / 1000)
+  }
+};
+
+hutch.publishToExchange('exchange.name', 'topic', publishOptions, message, function(err, res) {
+  console.log(res);
+});
+```
+
 ## Consume
 Consume creates a queue bound to a new channel.
 ```javascript
@@ -41,19 +64,18 @@ Consume creates a queue bound to a new channel.
     });
   };
 
-  rabbit.consume(options, consumer, function(err){
-    callback(err);
+  hutch.consume(options, consumer, function(err){
+    console.log("Successfully setup consumer for queue: [" + options.queue + "]");
   });
 ```
 
 ## Destroy
-Destory will unbind/purge the queue from the given exchange.
+Destroy will unbind/purge the queue from the given exchange.
 ```javascript
   var queue    = "queue.name";
   var exchange = "exchange.name";
 
-  rabbit.destory(queue, exchange, function(err){
-    if(!err) log.info("Successfully unbound queue: [" + queue + "]");
-    callback(err);
+  hutch.destroy(queue, exchange, function(err){
+    console.log("Successfully unbound queue: [" + queue + "]");
   });
  ```
