@@ -1,0 +1,29 @@
+{
+  "name": "amqp-hutch",
+  "version": "0.0.2",
+  "description": "amqplib wrapper",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robinsio/amqp-hutch"
+  },
+  "author": "Jon Robins <jon@robins.io> (https://github.com/robinsio)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PressAssociation/hermes-subscription-api/issues"
+  },
+  "dependencies": {
+    "amqplib": "0.4.1"
+  },
+  "devDependencies": {
+    "supertest-as-promised": "^1.0.0",
+    "chai": "^1.10.0",
+    "mocha": "^2.1.0",
+    "mocha-bamboo-reporter": "*",
+    "supertest": "^0.15.0",
+    "sinon": "^1.15.4",
+    "sinon-chai": "^2.8.0",
+    "plato": "^1.5.0",
+    "istanbul": "^0.4.2"
+  }
+}
