@@ -11,15 +11,15 @@ hutch.initialise({
   retryWait:        1000
 });
 
-hutch.on('ready', function(){
+hutch.on('ready', function() {
   console.log('Established RabbitMQ connection');
 });
 
-hutch.on('close', function(err){
+hutch.on('close', function(err) {
   console.log(err.message + 'RabbitMQ closing connection');
 });
 
-hutch.on('error', function(err){
+hutch.on('error', function(err) {
   console.log(err.message + 'RabbitMQ connection error');
 });
 ```
@@ -57,14 +57,14 @@ Consume creates a queue bound to a new channel.
     durable: true
   };
 
-  var consumer = function(message, done, fail){
-    some.service(message, function(err, res){
+  var consumer = function(message, done, fail) {
+    some.service(message, function(err, res) {
       if(err) return fail();    
       done();
     });
   };
 
-  hutch.consume(options, consumer, function(err){
+  hutch.consume(options, consumer, function(err) {
     console.log("Successfully setup consumer for queue: [" + options.queue + "]");
   });
 ```
@@ -75,7 +75,7 @@ Destroy will unbind/purge the queue from the given exchange.
   var queue    = "queue.name";
   var exchange = "exchange.name";
 
-  hutch.destroy(queue, exchange, function(err){
+  hutch.destroy(queue, exchange, function(err) {
     console.log("Successfully unbound queue: [" + queue + "]");
   });
  ```
