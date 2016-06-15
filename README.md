@@ -4,7 +4,9 @@
 ## Setup
 Configuration and Events for AMQP Hutch.
 ```javascript
-var hutch     = require('amqp-hutch');
+var AMQPHutch = require('amqp-hutch');
+
+var hutch = new AMQPHutch();
 
 hutch.initialise({
   connectionString: 'amqps://user:password@host:port/uri?heartbeat=3',
@@ -22,6 +24,8 @@ hutch.on('close', function(err) {
 hutch.on('error', function(err) {
   console.log(err.message + 'RabbitMQ connection error');
 });
+
+module.exports = hutch;
 ```
 
 ## Publish to Exchange
