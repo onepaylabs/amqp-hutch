@@ -1,4 +1,4 @@
-# AQMP:Hutch
+# AMQP:Hutch
 [amqplib](https://www.npmjs.com/package/amqplib) wrapper for easy setup and initialization.
 
 ## Setup
@@ -28,6 +28,31 @@ hutch.on('error', function(err) {
 module.exports = hutch;
 ```
 
+## Publish
+```javascript
+var message = {"Message": "Hello"};
+
+var options = {
+  exchange: {
+    durable: true,
+    confirm: true,
+    autoDelete: false,
+    type: 'topic'
+  },
+  publish: {
+    persistent: true,
+    contentType: 'application/json',
+    expiration: 86400000,
+    timestamp: Math.floor(Date.now() / 1000)
+  }
+};
+
+hutch.publishToExchange(options, message, function(err, res) {
+  console.log(res);
+});
+```
+
+
 ## Publish to Exchange
 ```javascript
 var message = {"Message": "Hello"};
@@ -54,11 +79,17 @@ hutch.publishToExchange('exchange.name', 'topic', publishOptions, message, funct
 ## Consume
 Consume creates a queue bound to a new channel.
 ```javascript
+
   var options = {
-    queue: 'queue.name',
-    exchange: 'exchange.name',
-    prefetch: 1,
-    durable: true
+    exchange: {
+      name: 'exchange.name',
+      type: 'topic'
+    },
+    queue: {
+      name: 'queue.name',
+      prefetch: 1,
+      durable:  true
+    }
   };
 
   var consumer = function(message, done, fail) {
