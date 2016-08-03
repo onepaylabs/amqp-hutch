@@ -2,6 +2,8 @@ var AMQPHutch = require('../');
 
 var hutch = new AMQPHutch();
 
+console.log("Hutch Status:" + hutch.status);
+
 hutch.initialise({
   connectionString: 'amqp://localhost',
   retryWait:        100
@@ -9,6 +11,8 @@ hutch.initialise({
 
 hutch.on('ready', function() {
   console.log('Established RabbitMQ connection');
+  console.log("Hutch Status:" + hutch.status);
+  console.log("Hutch Configuration:" + JSON.stringify(hutch.configuration));
   setup();
 });
 

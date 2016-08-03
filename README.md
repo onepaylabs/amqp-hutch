@@ -114,3 +114,20 @@ Destroy will unbind/purge the queue from the given exchange.
     console.log("Successfully unbound queue: [" + queue + "]");
   });
  ```
+
+## Monitoring
+
+amqp-hutch offers two properties which may come in helpful for monitoring.
+
+### status
+The status property can contain two values CONNECTED or DISCONNECTED.
+
+### configuration
+The configuration object contains the original configuration passed to amqp-hutch.
+
+
+```javascript
+  if (hutch.status === 'CONNECTED'){
+    console.log(hutch.configuration.connectionString)
+  }
+ ```
