@@ -38,7 +38,7 @@ var options = {
     confirm: true,
     autoDelete: false,
     type: 'topic',
-    name: 'example.excahange'
+    name: 'example.exchange'
   },
   publish: {
     persistent: true,
