@@ -37,7 +37,8 @@ var options = {
     durable: true,
     confirm: true,
     autoDelete: false,
-    type: 'topic'
+    type: 'topic',
+    name: 'example.exchange'
   },
   publish: {
     persistent: true,
@@ -47,7 +48,7 @@ var options = {
   }
 };
 
-hutch.publishToExchange(options, message, function(err, res) {
+hutch.publish(options, message, function(err, res) {
   console.log(res);
 });
 ```
@@ -114,3 +115,31 @@ Destroy will unbind/purge the queue from the given exchange.
     console.log("Successfully unbound queue: [" + queue + "]");
   });
  ```
+
+## Monitoring
+
+amqp-hutch offers two properties which may come in helpful for monitoring.
+
+### status
+The status property can contain two values CONNECTED or DISCONNECTED.
+
+### configuration
+The configuration object contains the original configuration passed to amqp-hutch.
+
+
+```javascript
+  if (hutch.status === 'CONNECTED'){
+    console.log(hutch.configuration.connectionString)
+  }
+ ```
+
+## Error Handing
+Errors triggered from the underlinging service calls with RabbitMQ can be caught by listening for events.
+
+```javascript
+hutch.on('error', function(err) {
+  console.log(err);
+});
+```
+
+If the service is invoked prior to a connection been established the service will return a 'AMQPConnectionError' 

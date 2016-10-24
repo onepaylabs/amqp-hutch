@@ -1,6 +1,6 @@
 {
   "name": "amqp-hutch",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "amqplib wrapper",
   "main": "index.js",
   "repository": {
@@ -13,7 +13,8 @@
     "url": "https://github.com/PressAssociation/hermes-subscription-api/issues"
   },
   "dependencies": {
-    "amqplib": "0.4.1"
+    "amqplib": "0.4.1",
+    "custom-error-generator": "7.0.0"
   },
   "devDependencies": {
     "supertest-as-promised": "^1.0.0",
