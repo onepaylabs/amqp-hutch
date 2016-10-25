@@ -90,7 +90,8 @@ Consume creates a queue bound to a new channel.
       name: 'queue.name',
       prefetch: 1,
       durable:  true
-    }
+    },
+    routingKey: '#'
   };
 
   var consumer = function(message, done, fail) {
@@ -142,4 +143,4 @@ hutch.on('error', function(err) {
 });
 ```
 
-If the service is invoked prior to a connection been established the service will return a 'AMQPConnectionError' 
+If the service is invoked prior to a connection been established the service will return a 'AMQPConnectionError'
