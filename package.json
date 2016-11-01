@@ -1,6 +1,6 @@
 {
   "name": "amqp-hutch",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "amqplib wrapper",
   "main": "index.js",
   "repository": {
@@ -10,10 +10,10 @@
   "author": "Jon Robins <jon@robins.io> (https://github.com/robinsio)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/PressAssociation/hermes-subscription-api/issues"
+    "url": "https://github.com/robinsio/amqp-hutch/issues"
   },
   "dependencies": {
-    "amqplib": "0.4.1",
+    "amqplib": "0.4.2",
     "custom-error-generator": "7.0.0"
   },
   "devDependencies": {
