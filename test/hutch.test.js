@@ -45,32 +45,13 @@ describe('Hutch', function() {
   });
 
   it('should error when not connected', function(complete) {
+    this.timeout(5000); // Allow up to 5 seconds for windows
 
     var hutch = new AMQPHutch();
-
-    var options = {
-      exchange: {
-        name: 'example.exchange.1',
-        type: 'topic'
-      },
-      queue: {
-        name: 'example.queue',
-        prefetch: 1,
-        durable:  true
-      },
-      publish: {
-        persistent: true,
-        expiration: 86400000
-      }
-    };
 
     hutch.initialise({
       connectionString: 'amqp://bad',
       retryWait:        100
-    });
-
-    hutch.on('ready', function() {
-      hutch.publish(options, "Example Message!", function(err){});
     });
       
     hutch.once('error', function(err) {
