@@ -53,8 +53,8 @@ describe('Hutch', function() {
       connectionString: 'amqp://bad',
       retryWait:        100
     });
-      
-    hutch.once('error', function(err) {
+
+    hutch.on('error', function(err) {
       complete();
     });
   });
@@ -96,6 +96,48 @@ describe('Hutch', function() {
       hutch.consume(options, consumer, function(err) {
         hutch.publish(options, "Example Message!", function(err, res){});
       });
+    });
+  });
+
+  it('should trigger a closeChannel event with the queue name for the channel', function(complete) {
+
+    var hutch = new AMQPHutch();
+
+    hutch.initialise({
+      connectionString: 'amqp://localhost',
+      retryWait:        100
+    });
+
+    hutch.on('ready', function() {
+
+      var options = {
+        exchange: {
+          name: 'example.exchange.2',
+          type: 'topic'
+        },
+        queue: {
+          name: 'example.queue.1',
+          prefetch: 1,
+          durable:  true
+        },
+        publish: {
+          persistent: true,
+          expiration: 86400000
+        }
+      };
+
+      var consumer = function(message, done, fail) {
+        hutch.close(options.queue.name, function(err){});
+      };
+
+      hutch.consume(options, consumer, function(err) {
+        hutch.publish(options, "Example Message!", function(err, res){});
+      });
+    });
+
+    hutch.on('channelClosed', function(queue){
+      queue.should.equal('example.queue.1');
+      complete();
     });
   });
 });
