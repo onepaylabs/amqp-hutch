@@ -51,7 +51,7 @@ describe('Hutch', function() {
 
     hutch.initialise({
       connectionString: 'amqp://bad',
-      retryWait:        100
+      retryWait:        100000
     });
 
     hutch.on('error', function(err) {
