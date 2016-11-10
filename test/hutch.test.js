@@ -5,6 +5,42 @@ var AMQPHutch = require('..');
 
 describe('Hutch', function() {
 
+  it('isConnected should return true when hutch is connected', function(complete) {
+    var hutch = new AMQPHutch();
+
+    hutch.initialise({
+      connectionString: 'amqp://localhost',
+      retryWait:        100000
+    });
+
+    hutch.on('ready', function(){
+      hutch.isConnected().should.equal(true);
+      complete();
+    })
+  });
+
+  it('isConnected should return false when hutch is not connected', function(complete) {
+    var hutch = new AMQPHutch();
+    hutch.isConnected().should.equal(false);
+    complete();
+  });
+
+  it('should return a no channel error when attempting to close a channel that doesnt exist', function(complete) {
+    var hutch = new AMQPHutch();
+
+    hutch.initialise({
+      connectionString: 'amqp://localhost',
+      retryWait:        100000
+    });
+
+    hutch.on('ready', function(){
+      hutch.close("not/going/to/exist", function(err){
+        err.name.should.equal('NoChannelError');
+        complete();
+      })
+    })
+  });
+
   it('should bind and consumer a message', function(complete) {
 
     var hutch = new AMQPHutch();
