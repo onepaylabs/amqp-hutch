@@ -129,7 +129,7 @@ The configuration object contains the original configuration passed to amqp-hutc
 
 
 ```javascript
-  if (hutch.status === 'CONNECTED'){
+  if (hutch.isConnected()){
     console.log(hutch.configuration.connectionString)
   }
  ```
