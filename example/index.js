@@ -16,10 +16,14 @@ hutch.on('ready', function() {
   setup();
 });
 
+hutch.on('error', function (err) {
+  console.log("Error: " + err);
+});
+
 function setup(){
 
   var consumer = function(message, done, fail) {
-    console.log(JSON.parse(message.content));
+    console.log("Message Received: " + JSON.parse(message.content));
     done();
   };
 
@@ -36,14 +40,20 @@ function setup(){
     publish: {
       persistent: true,
       expiration: 86400000
-    }
+    },
+    exclusive: true
   };
 
   hutch.consume(options, consumer, function(err) {
+
+    if(err){
+      console.log(err);
+      return;
+    }
+
     console.log('Consumer Setup....');
 
     hutch.publish(options, "Example Message!", function(err, res){
-      console.log("*** Message Sent ***");
     });
   });
 }
