@@ -16,7 +16,6 @@ hutch.on('ready', function() {
   setup();
 });
 
-// with this removed the "close" event is not emitted and no retry occurs when rabbit gets bounced
 hutch.on('error', function (err) {
   console.log("Error: " + err);
 });
