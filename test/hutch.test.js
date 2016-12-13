@@ -52,12 +52,6 @@ describe('Hutch', function() {
 
     hutch.on('ready', function() {
 
-      var consumer = function(message, done, fail) {
-        JSON.parse(message.content).should.equal('Example Message!');
-        done();
-        complete();
-      };
-
       var options = {
         exchange: {
           name: 'example.exchange.1',
@@ -72,6 +66,15 @@ describe('Hutch', function() {
           persistent: true,
           expiration: 86400000
         }
+      };
+
+      var consumer = function(message, done, fail) {
+        JSON.parse(message.content).should.equal('Example Message!');
+        done();
+
+        hutch.close(options.queue.name, function(){
+          complete();
+        });
       };
 
       hutch.consume(options, consumer, function(err) {
@@ -174,6 +177,107 @@ describe('Hutch', function() {
     hutch.on('channelClosed', function(queue){
       queue.should.equal('example.queue.1');
       complete();
+    });
+  });
+
+  it('should error when one instance of hutch tries to consumer against the same queue', function(complete) {
+
+    var hutch = new AMQPHutch();
+
+    hutch.initialise({
+      connectionString: 'amqp://localhost',
+      retryWait:        100
+    });
+
+    hutch.on('ready', function() {
+
+      var consumer = function(message, done, fail) {done();};
+
+      var options = {
+        exchange: {
+          name: 'example.exchange.1',
+          type: 'topic'
+        },
+        queue: {
+          name: 'example.queue',
+          prefetch: 1,
+          durable:  true
+        },
+        publish: {
+          persistent: true,
+          expiration: 86400000
+        }
+      };
+
+      hutch.consume(options, consumer, function(err) {
+        hutch.consume(options, consumer, function(err) {
+          err.name.should.equal('ChannelAlreadyExists');
+
+          hutch.close(options.queue.name, function(){
+            complete();
+          });
+        });
+      });
+    });
+  });
+
+  it('should retry for exclusive consumer after consumer one goes down', function(complete) {
+
+    this.timeout(20000); // Allow up to 15 seconds for windows
+
+    var config = {
+      connectionString: 'amqp://localhost',
+      retryWait:        100
+    };
+
+    var options = {
+      exchange: {
+        name: 'example.exchange.1',
+        type: 'topic'
+      },
+      queue: {
+        name: 'example.queue',
+        prefetch: 1,
+        durable:  true
+      },
+      publish: {
+        persistent: true,
+        expiration: 86400000
+      },
+      exclusive: true
+    };
+
+    var consumer = function(message, done, fail) { done(); };
+
+    var instance1 = new AMQPHutch();
+    var instance2 = new AMQPHutch();
+
+    instance1.initialise(config);
+    instance2.initialise(config);
+
+    instance1.on('ready', function() {
+
+      console.log("Hutch Instance Ready")
+
+      instance1.consume(options, consumer, function(err) {
+        console.log("Setup Consumer 1");
+
+        instance2.consume(options, consumer, function(err) {
+          console.log("Setup Consumer 2");
+          should.not.exist(err);
+
+          instance1.close(options.queue.name, function(){
+            instance2.close(options.queue.name, function(){ complete(); });
+          });
+        });
+
+        setTimeout(function(){
+          instance1.close(options.queue.name, function(){
+            // This will trigger consumer 2 to start
+            console.log("Shutting down Consumer 1");
+          })
+        }, 4000)
+      });
     });
   });
 });
