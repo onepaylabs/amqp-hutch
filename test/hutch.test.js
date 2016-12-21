@@ -1,4 +1,5 @@
 var mocha   = require('mocha');
+var sinon   = require('sinon');
 var should  = require('chai').should();
 
 var AMQPHutch = require('..');
@@ -86,6 +87,7 @@ describe('Hutch', function() {
   it('should publish a message using the same channel', function(complete) {
 
     var hutch = new AMQPHutch();
+    var spy = sinon.spy(hutch, '_getChannelByExchange');
 
     hutch.initialise({
       connectionString: 'amqp://localhost',
@@ -116,8 +118,9 @@ describe('Hutch', function() {
         done();
 
         if(count === 2){
-          var channel = hutch._getChannelByExchange(options.exchange.name);
-          channel.should.exist();
+          should.not.exist(spy.firstCall.returnValue);
+          spy.secondCall.returnValue.exchange.should.equal(options.exchange.name);
+
           hutch.close(options.queue.name, function(){
             complete();
           });
