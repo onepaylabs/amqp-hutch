@@ -382,7 +382,7 @@ describe('Hutch', function() {
 
   it('should clear skip option for exclusive consumer after consumer is rejected', function(complete) {
 
-    this.timeout(20000); // Allow up to 15 seconds for windows
+    this.timeout(20000); // Allow up to 20 seconds for windows
 
     var config = {
       connectionString: 'amqp://localhost',
@@ -434,6 +434,7 @@ describe('Hutch', function() {
 
         setTimeout(function(){
           // We should have only processed one of the files.
+          messages.length.should.equal(1);
           messages[0].should.equal('c2');
           instance2.close(options.queue.name, function(){
             complete();
