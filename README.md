@@ -106,6 +106,42 @@ Consume creates a queue bound to a new channel.
   });
 ```
 
+### Exclusive
+Adding the Exclusive flag to the options will manage an exclusive consumer, the conusmer will retry until closed.
+```javascript
+
+  var options = {
+    exchange: {
+      name: 'exchange.name',
+      type: 'topic'
+    },
+    queue: {
+      name: 'queue.name',
+      prefetch: 1,
+      durable:  true
+    },
+    exclusive: true
+  };
+```  
+
+### SkipNext
+Adding the skipNext flag to the options will skip the next message in the queue before initialising, this can be useful for unblocking failed messages.
+```javascript
+
+  var options = {
+    exchange: {
+      name: 'exchange.name',
+      type: 'topic'
+    },
+    queue: {
+      name: 'queue.name',
+      prefetch: 1,
+      durable:  true
+    },
+    skipNext: true
+  };
+```  
+
 ## Destroy
 Destroy will unbind/purge the queue from the given exchange.
 ```javascript
