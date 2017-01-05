@@ -446,4 +446,52 @@ describe('Hutch', function() {
       });
     });
   });
+
+  it('should destroy a queue that it does not own', function(complete) {
+    this.timeout(10000); // Allow up to 20 seconds for windows
+
+    var config = {
+      connectionString: 'amqp://localhost',
+      retryWait:        100
+    };
+
+    var options = {
+      exchange: {
+        name: 'example.exchange.1',
+        type: 'topic'
+      },
+      queue: {
+        name: 'example.queue',
+        prefetch: 1,
+        durable:  true
+      },
+      publish: {
+        persistent: true,
+        expiration: 86400000
+      },
+      exclusive: true
+    };
+
+    var consumer1 = function(message, done, fail) { messages.push('c1'); done(); };
+    var consumer2 = function(message, done, fail) { messages.push('c2'); done(); };
+
+    var instance1 = new AMQPHutch();
+    var instance2 = new AMQPHutch();
+
+    instance1.initialise(config);
+    instance2.initialise(config);
+
+    instance1.on('ready', function() {
+      instance1.consume(options, consumer1, function(err) {
+        instance2.consume(options, consumer2, function(err) {
+        });
+        instance2.destroy(options.queue.name, options.exchange.name, function(err){
+          instance1.close(options.queue.name, function(){
+            err.message.should.equal('Could not close channel that does not exist');
+            complete();
+          });
+        });
+      });
+    });
+  });
 });
