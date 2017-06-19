@@ -487,7 +487,6 @@ describe('Hutch', function() {
         });
         instance2.destroy(options.queue.name, options.exchange.name, function(err){
           instance1.close(options.queue.name, function(){
-            err.message.should.equal('Could not close channel that does not exist');
             complete();
           });
         });
