@@ -30,10 +30,12 @@ function setup(){
   var options = {
     exchange: {
       name: 'example.exchange.1',
-      type: 'topic'
+      type: 'topic',
+      routingKey: 'example.routingKey.1'
     },
     queue: {
       name: 'example.queue',
+      routingKey: 'example.routingKey.1',
       prefetch: 1,
       durable:  true
     },

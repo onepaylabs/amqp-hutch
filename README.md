@@ -34,6 +34,7 @@ var message = {"Message": "Hello"};
 
 var options = {
   exchange: {
+    routingKey: 'example.routingKey',
     durable: true,
     confirm: true,
     autoDelete: false,
@@ -96,7 +97,7 @@ Consume creates a queue bound to a new channel.
 
   var consumer = function(message, done, fail) {
     some.service(message, function(err, res) {
-      if(err) return fail();    
+      if(err) return fail();
       done();
     });
   };
@@ -122,7 +123,7 @@ Adding the Exclusive flag to the options will manage an exclusive consumer, the 
     },
     exclusive: true
   };
-```  
+```
 
 ### SkipNext
 Adding the skipNext flag to the options will skip the next message in the queue before initialising, this can be useful for unblocking failed messages.
@@ -140,7 +141,7 @@ Adding the skipNext flag to the options will skip the next message in the queue 
     },
     skipNext: true
   };
-```  
+```
 
 ## Destroy
 Destroy will unbind/purge the queue from the given exchange.
